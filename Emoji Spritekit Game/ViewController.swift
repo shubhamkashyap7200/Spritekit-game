@@ -60,10 +60,33 @@ extension ViewController: ARSKViewDelegate {
     
     func view(_ view: ARSKView, nodeFor anchor: ARAnchor) -> SKNode? {
         // Create and configure a node for the anchor added to the view's session.
-        let labelNode = SKLabelNode(text: "👾")
-        labelNode.horizontalAlignmentMode = .center
-        labelNode.verticalAlignmentMode = .center
-        return labelNode;
+        // 1
+        let spawnNode = SKNode()
+        
+        // 2
+        let boxNode = SKLabelNode(text: "🔥")
+        boxNode.verticalAlignmentMode = .center
+        boxNode.horizontalAlignmentMode = .center
+        boxNode.zPosition = 100
+        boxNode.setScale(1.5)
+        spawnNode.addChild(boxNode)
+        return spawnNode
+    }
+    
+    func view(_ view: ARSKView, didAdd node: SKNode, for anchor: ARAnchor) {
+        //
+    }
+    
+    func view(_ view: ARSKView, willUpdate node: SKNode, for anchor: ARAnchor) {
+        //
+    }
+    
+    func view(_ view: ARSKView, didUpdate node: SKNode, for anchor: ARAnchor) {
+        //
+    }
+    
+    func view(_ view: ARSKView, didRemove node: SKNode, for anchor: ARAnchor) {
+        //
     }
     
     func session(_ session: ARSession, didFailWithError error: Error) {

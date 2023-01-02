@@ -29,6 +29,7 @@ class Scene: SKScene {
 
     override func didMove(to view: SKView) {
         // Setup your scene here
+        configureAll()
     }
     
     override func update(_ currentTime: TimeInterval) {
@@ -57,6 +58,14 @@ class Scene: SKScene {
         }
     }
     
+    func configureAll() {
+        configureGame()
+    }
+    
+    func configureGame() {
+        startGame()
+    }
+    
     private func updateHUD(_ message: String) {
         guard let sceneView = self.view as? ARSKView else { return }
         
@@ -67,6 +76,8 @@ class Scene: SKScene {
     public func startGame() {
         gameState = .TapToStart
         updateHUD("TAP TO START GAME")
+        
+        removeAnchor()
     }
     
     public func playGame() {
@@ -74,11 +85,37 @@ class Scene: SKScene {
         score = 0
         lives = 10
         spawnTime = 0
+        
+        addAnchor()
     }
     
     public func stopGame() {
         gameState = .GameOver
         updateHUD("GAME OVER ! YOU SCORE IS: " + String(score))
+    }
+    
+    func addAnchor() {
+        guard let sceneView = self.view as? ARSKView else { return }
+        
+        if let currentFrame = sceneView.session.currentFrame {
+            var translation = matrix_identity_float4x4
+            translation.columns.3.z = -0.5
+            
+            let transform = simd_mul(currentFrame.camera.transform, translation)
+            anchor = ARAnchor(transform: transform)
+            if let anchor = anchor {
+                sceneView.session.add(anchor: anchor)
+            }
+        }
+    }
+    
+    func removeAnchor() {
+        guard let sceneView = self.view as? ARSKView else { return }
+        
+        if anchor != nil {
+            guard let anchor = anchor else { return }
+            sceneView.session.remove(anchor: anchor)
+        }
     }
 }
 
