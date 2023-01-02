@@ -58,11 +58,11 @@ class Scene: SKScene {
         }
     }
     
-    func configureAll() {
+    private func configureAll() {
         configureGame()
     }
     
-    func configureGame() {
+    private func configureGame() {
         startGame()
     }
     
@@ -94,7 +94,7 @@ class Scene: SKScene {
         updateHUD("GAME OVER ! YOU SCORE IS: " + String(score))
     }
     
-    func addAnchor() {
+    private func addAnchor() {
         guard let sceneView = self.view as? ARSKView else { return }
         
         if let currentFrame = sceneView.session.currentFrame {
@@ -109,12 +109,28 @@ class Scene: SKScene {
         }
     }
     
-    func removeAnchor() {
+    private func removeAnchor() {
         guard let sceneView = self.view as? ARSKView else { return }
         
         if anchor != nil {
             guard let anchor = anchor else { return }
             sceneView.session.remove(anchor: anchor)
         }
+    }
+    
+    private func spawnEmoji() {
+        // 1
+        guard let sceneView = self.view as? ARSKView else { return }
+        
+        // 2
+        let emojiNode = SKLabelNode()
+        emojiNode.text = String(emojis.randomElement()!)
+        emojiNode.name = "Emoji"
+        emojiNode.horizontalAlignmentMode = .center
+        emojiNode.verticalAlignmentMode = .center
+        
+        // 3
+        let spawnNode = sceneView.scene?.childNode(withName: "SpawnPoint")
+        spawnNode?.addChild(emojiNode)
     }
 }
