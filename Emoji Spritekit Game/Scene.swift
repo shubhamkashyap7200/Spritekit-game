@@ -155,6 +155,24 @@ class Scene: SKScene {
         
         // 5
         emojiNode.physicsBody?.applyTorque(-0.2 + 0.4 * randomCGFloat())
+        
+        // 6
+        let spawnSoundAction = SKAction.playSoundFileNamed("SoundEffects/Spawn.wav", waitForCompletion: false)
+        let dieSoundAction = SKAction.playSoundFileNamed("SoundEffects/Die.wav", waitForCompletion: false)
+        let waitAction = SKAction.wait(forDuration: 3)
+        let removeAction = SKAction.removeFromParent()
+        
+        // 7
+        let runAction = SKAction.run {
+            self.lives -= 1
+            if self.lives <= 0 {
+                self.stopGame()
+            }
+        }
+        
+        // 8
+        let sequenceAction = SKAction.sequence([spawnSoundAction, waitAction, dieSoundAction, runAction, removeAction])
+        emojiNode.run(sequenceAction)
     }
     
     private func randomCGFloat() -> CGFloat {
