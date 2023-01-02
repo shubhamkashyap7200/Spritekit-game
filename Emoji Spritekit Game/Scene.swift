@@ -149,6 +149,6 @@ class Scene: SKScene {
         
         // 3
         emojiNode.physicsBody = SKPhysicsBody(circleOfRadius: 15.0)
-        emojiNode.physicsBody?.mass = 0.01
+        emojiNode.physicsBody?.mass = 0.01 // 10 grams
     }
 }
