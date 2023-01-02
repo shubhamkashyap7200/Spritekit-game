@@ -23,10 +23,10 @@ class Scene: SKScene {
     fileprivate var spawnTime: TimeInterval = 0
     fileprivate var score: Int = 0
     fileprivate var lives: Int = 10
-
+    
     
     // MARK: - Lifecycle functions
-
+    
     override func didMove(to view: SKView) {
         // Setup your scene here
         configureStartGame()
@@ -58,7 +58,7 @@ class Scene: SKScene {
             break
         }
     }
-        
+    
     private func configureStartGame() {
         startGame()
     }
@@ -79,7 +79,7 @@ class Scene: SKScene {
         
         // 4
         updateHUD("Score: " + String(score) + " | LIVES: " + String(lives))
-
+        
     }
     
     private func updateHUD(_ message: String) {
@@ -149,5 +149,15 @@ class Scene: SKScene {
         // 3
         emojiNode.physicsBody = SKPhysicsBody(circleOfRadius: 15.0)
         emojiNode.physicsBody?.mass = 0.01 // 10 grams
+        
+        // 4
+        emojiNode.physicsBody?.applyImpulse(CGVector(dx: -5 + 10 * randomCGFloat(), dy: 10))
+        
+        // 5
+        emojiNode.physicsBody?.applyTorque(-0.2 + 0.4 * randomCGFloat())
+    }
+    
+    private func randomCGFloat() -> CGFloat {
+        return CGFloat(Float(arc4random()) / Float(UINT32_MAX))
     }
 }
