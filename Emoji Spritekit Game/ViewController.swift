@@ -9,10 +9,14 @@ import UIKit
 import SpriteKit
 import ARKit
 
-class ViewController: UIViewController, ARSKViewDelegate {
-    
+class ViewController: UIViewController {
+    // MARK: - Properties
+
+    @IBOutlet weak var hudLabel: UILabel!
     @IBOutlet var sceneView: ARSKView!
     
+    // MARK: - Lifecycle functions
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -46,7 +50,13 @@ class ViewController: UIViewController, ARSKViewDelegate {
         sceneView.session.pause()
     }
     
-    // MARK: - ARSKViewDelegate
+    // MARK: - Helper functions
+
+}
+
+// MARK: - ARSKViewDelegate
+
+extension ViewController: ARSKViewDelegate {
     
     func view(_ view: ARSKView, nodeFor anchor: ARAnchor) -> SKNode? {
         // Create and configure a node for the anchor added to the view's session.
@@ -70,4 +80,5 @@ class ViewController: UIViewController, ARSKViewDelegate {
         // Reset tracking and/or remove existing anchors if consistent tracking is required
         
     }
+
 }
