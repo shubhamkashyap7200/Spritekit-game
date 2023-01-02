@@ -136,8 +136,7 @@ class Scene: SKScene {
     
     private func spawnEmoji() {
         // 1
-        let emojiNode = SKLabelNode()
-        emojiNode.text = String(emojis.randomElement()!)
+        let emojiNode = SKLabelNode(text: String(emojis.randomElement()!))
         emojiNode.name = "Emoji"
         emojiNode.horizontalAlignmentMode = .center
         emojiNode.verticalAlignmentMode = .center

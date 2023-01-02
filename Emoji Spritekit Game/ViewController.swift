@@ -66,6 +66,7 @@ extension ViewController: ARSKViewDelegate {
         // Create and configure a node for the anchor added to the view's session.
         // 1
         let spawnNode = SKNode()
+        spawnNode.name = "SpawnPoint"
         
         // 2
         let boxNode = SKLabelNode(text: "🔥")
