@@ -157,8 +157,8 @@ class Scene: SKScene {
         emojiNode.physicsBody?.applyTorque(-0.2 + 0.4 * randomCGFloat())
         
         // 6
-        let spawnSoundAction = SKAction.playSoundFileNamed("SoundEffects/Spawn.wav", waitForCompletion: false)
-        let dieSoundAction = SKAction.playSoundFileNamed("SoundEffects/Die.wav", waitForCompletion: false)
+        let spawnSoundAction = SKAction.playSoundFileNamed("Spawn.wav", waitForCompletion: false)
+        let dieSoundAction = SKAction.playSoundFileNamed("Die.wav", waitForCompletion: false)
         let waitAction = SKAction.wait(forDuration: 3)
         let removeAction = SKAction.removeFromParent()
         
