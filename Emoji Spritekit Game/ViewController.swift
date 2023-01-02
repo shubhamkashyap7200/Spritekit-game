@@ -130,7 +130,8 @@ extension ViewController: ARSKViewDelegate {
     
     func sessionInterruptionEnded(_ session: ARSession) {
         // Reset tracking and/or remove existing anchors if consistent tracking is required
-        
+        let scene = sceneView.scene as! Scene
+        scene.startGame()
     }
 
 }
