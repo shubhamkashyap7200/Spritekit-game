@@ -29,11 +29,12 @@ class Scene: SKScene {
 
     override func didMove(to view: SKView) {
         // Setup your scene here
-        configureAll()
+        configureStartGame()
     }
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+        configuringSpawnManager(currentTime: currentTime)
     }
     
     
@@ -57,13 +58,28 @@ class Scene: SKScene {
             break
         }
     }
-    
-    private func configureAll() {
-        configureGame()
+        
+    private func configureStartGame() {
+        startGame()
     }
     
-    private func configureGame() {
-        startGame()
+    private func configuringSpawnManager(currentTime: TimeInterval) {
+        // 1
+        if gameState != .Playing { return }
+        
+        // 2
+        print("DEBUG:: Spawn Time :: \(spawnTime)")
+        if spawnTime == 0 { spawnTime = currentTime + 3 }
+        
+        // 3
+        if spawnTime < currentTime {
+            spawnEmoji()
+            spawnTime = currentTime + 0.5
+        }
+        
+        // 4
+        updateHUD("Score: " + String(score) + " | LIVES: " + String(lives))
+
     }
     
     private func updateHUD(_ message: String) {
