@@ -51,7 +51,7 @@ class Scene: SKScene {
             playGame()
             break
         case .Playing:
-            // checkTouches(touches)
+            checkTouches(touches)
             break
         case .GameOver:
             startGame()
@@ -177,5 +177,23 @@ class Scene: SKScene {
     
     private func randomCGFloat() -> CGFloat {
         return CGFloat(Float(arc4random()) / Float(UINT32_MAX))
+    }
+    
+    private func checkTouches(_ touches: Set<UITouch>) {
+        
+        // 1
+        guard let touch = touches.first else { return }
+        let touchLocation = touch.location(in: self)
+        let touchNode = self.atPoint(touchLocation)
+        
+        // 2
+        if touchNode.name != "Emoji" { return }
+        score += 1
+        
+        // 3
+        let collectSoundAction = SKAction.playSoundFileNamed("Collect.wav", waitForCompletion: false)
+        let removeAction = SKAction.removeFromParent()
+        let sequenceAction = SKAction.sequence([collectSoundAction, removeAction])
+        touchNode.run(sequenceAction)
     }
 }
