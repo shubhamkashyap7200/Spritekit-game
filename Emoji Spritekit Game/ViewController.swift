@@ -66,14 +66,23 @@ extension ViewController: ARSKViewDelegate {
         // Create and configure a node for the anchor added to the view's session.
         // 1
         let spawnNode = SKNode()
+        spawnNode.name = "SpawnPoint"
         
         // 2
         let boxNode = SKLabelNode(text: "🔥")
         boxNode.verticalAlignmentMode = .center
         boxNode.horizontalAlignmentMode = .center
         boxNode.zPosition = 100
-        boxNode.setScale(1.5)
+        boxNode.setScale(0)
         spawnNode.addChild(boxNode)
+        
+        
+        // 3
+        let startAction = SKAction.playSoundFileNamed("GameStart.wav", waitForCompletion: false)
+        let scaleToAction = SKAction.scale(to: 1.5, duration: 0.8)
+        let sequenceAction = SKAction.sequence([startAction, scaleToAction])
+        boxNode.run(sequenceAction)
+        
         return spawnNode
     }
     

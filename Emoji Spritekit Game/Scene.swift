@@ -23,17 +23,18 @@ class Scene: SKScene {
     fileprivate var spawnTime: TimeInterval = 0
     fileprivate var score: Int = 0
     fileprivate var lives: Int = 10
-
+    
     
     // MARK: - Lifecycle functions
-
+    
     override func didMove(to view: SKView) {
         // Setup your scene here
-        configureAll()
+        configureStartGame()
     }
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+        configuringSpawnManager(currentTime: currentTime)
     }
     
     
@@ -50,7 +51,7 @@ class Scene: SKScene {
             playGame()
             break
         case .Playing:
-            // checkTouches(touches)
+            checkTouches(touches)
             break
         case .GameOver:
             startGame()
@@ -58,12 +59,27 @@ class Scene: SKScene {
         }
     }
     
-    func configureAll() {
-        configureGame()
+    private func configureStartGame() {
+        startGame()
     }
     
-    func configureGame() {
-        startGame()
+    private func configuringSpawnManager(currentTime: TimeInterval) {
+        // 1
+        if gameState != .Playing { return }
+        
+        // 2
+        print("DEBUG:: Spawn Time :: \(spawnTime)")
+        if spawnTime == 0 { spawnTime = currentTime + 3 }
+        
+        // 3
+        if spawnTime < currentTime {
+            spawnEmoji()
+            spawnTime = currentTime + 0.5
+        }
+        
+        // 4
+        updateHUD("Score: " + String(score) + " | LIVES: " + String(lives))
+        
     }
     
     private func updateHUD(_ message: String) {
@@ -94,7 +110,7 @@ class Scene: SKScene {
         updateHUD("GAME OVER ! YOU SCORE IS: " + String(score))
     }
     
-    func addAnchor() {
+    private func addAnchor() {
         guard let sceneView = self.view as? ARSKView else { return }
         
         if let currentFrame = sceneView.session.currentFrame {
@@ -109,12 +125,75 @@ class Scene: SKScene {
         }
     }
     
-    func removeAnchor() {
+    private func removeAnchor() {
         guard let sceneView = self.view as? ARSKView else { return }
         
         if anchor != nil {
             guard let anchor = anchor else { return }
             sceneView.session.remove(anchor: anchor)
         }
+    }
+    
+    private func spawnEmoji() {
+        // 1
+        let emojiNode = SKLabelNode(text: String(emojis.randomElement()!))
+        emojiNode.name = "Emoji"
+        emojiNode.horizontalAlignmentMode = .center
+        emojiNode.verticalAlignmentMode = .center
+        
+        // 2
+        guard let sceneView = self.view as? ARSKView else { return }
+        let spawnNode = sceneView.scene?.childNode(withName: "SpawnPoint")
+        spawnNode?.addChild(emojiNode)
+        
+        // 3
+        emojiNode.physicsBody = SKPhysicsBody(circleOfRadius: 15.0)
+        emojiNode.physicsBody?.mass = 0.01 // 10 grams
+        
+        // 4
+        emojiNode.physicsBody?.applyImpulse(CGVector(dx: -5 + 10 * randomCGFloat(), dy: 10))
+        
+        // 5
+        emojiNode.physicsBody?.applyTorque(-0.2 + 0.4 * randomCGFloat())
+        
+        // 6
+        let spawnSoundAction = SKAction.playSoundFileNamed("Spawn.wav", waitForCompletion: false)
+        let dieSoundAction = SKAction.playSoundFileNamed("Die.wav", waitForCompletion: false)
+        let waitAction = SKAction.wait(forDuration: 3)
+        let removeAction = SKAction.removeFromParent()
+        
+        // 7
+        let runAction = SKAction.run {
+            self.lives -= 1
+            if self.lives <= 0 {
+                self.stopGame()
+            }
+        }
+        
+        // 8
+        let sequenceAction = SKAction.sequence([spawnSoundAction, waitAction, dieSoundAction, runAction, removeAction])
+        emojiNode.run(sequenceAction)
+    }
+    
+    private func randomCGFloat() -> CGFloat {
+        return CGFloat(Float(arc4random()) / Float(UINT32_MAX))
+    }
+    
+    private func checkTouches(_ touches: Set<UITouch>) {
+        
+        // 1
+        guard let touch = touches.first else { return }
+        let touchLocation = touch.location(in: self)
+        let touchNode = self.atPoint(touchLocation)
+        
+        // 2
+        if touchNode.name != "Emoji" { return }
+        score += 1
+        
+        // 3
+        let collectSoundAction = SKAction.playSoundFileNamed("Collect.wav", waitForCompletion: false)
+        let removeAction = SKAction.removeFromParent()
+        let sequenceAction = SKAction.sequence([collectSoundAction, removeAction])
+        touchNode.run(sequenceAction)
     }
 }
