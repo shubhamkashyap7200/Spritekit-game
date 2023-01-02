@@ -51,7 +51,11 @@ class ViewController: UIViewController {
     }
     
     // MARK: - Helper functions
-
+    private func showAlert(_ title: String, _ message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
 }
 
 // MARK: - ARSKViewDelegate
@@ -89,9 +93,34 @@ extension ViewController: ARSKViewDelegate {
         //
     }
     
+    func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
+        switch camera.trackingState {
+        case .notAvailable:
+            showAlert("Tracking Limited", "AR Experience not available")
+            break
+        case .limited(let reason):
+            switch reason {
+            case .initializing:
+                break
+            case .excessiveMotion:
+                showAlert("Tracking Limited", "Excessive motion")
+                break
+            case .insufficientFeatures:
+                showAlert("Tracking Limited", "Insufficient features")
+            case .relocalizing:
+                break
+            @unknown default:
+                break
+            }
+            break
+        case .normal:
+            break
+        }
+    }
+    
     func session(_ session: ARSession, didFailWithError error: Error) {
         // Present an error message to the user
-        
+        showAlert("Session Failure", error.localizedDescription)
     }
     
     func sessionWasInterrupted(_ session: ARSession) {
