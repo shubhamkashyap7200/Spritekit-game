@@ -136,17 +136,19 @@ class Scene: SKScene {
     
     private func spawnEmoji() {
         // 1
-        guard let sceneView = self.view as? ARSKView else { return }
-        
-        // 2
         let emojiNode = SKLabelNode()
         emojiNode.text = String(emojis.randomElement()!)
         emojiNode.name = "Emoji"
         emojiNode.horizontalAlignmentMode = .center
         emojiNode.verticalAlignmentMode = .center
         
-        // 3
+        // 2
+        guard let sceneView = self.view as? ARSKView else { return }
         let spawnNode = sceneView.scene?.childNode(withName: "SpawnPoint")
         spawnNode?.addChild(emojiNode)
+        
+        // 3
+        emojiNode.physicsBody = SKPhysicsBody(circleOfRadius: 15.0)
+        emojiNode.physicsBody?.mass = 0.01
     }
 }
